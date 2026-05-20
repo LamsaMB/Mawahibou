@@ -316,12 +316,20 @@
 
     .card-arabic {
       font-family: 'Lateef', 'Noto Nastaliq Urdu', serif;
-      font-size: clamp(26px, 5vw, 60px);
-      line-height: 2;
-      direction: rtl;
-      color: var(--black);
-      text-align: right;
+  font-size: clamp(38px, 7vw, 90px);
+  line-height: 2.3;
+  direction: rtl;
+  text-align: right;
+  color: var(--black);
+  font-weight: 500;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.08);
     }
+    @media (max-width: 600px) {
+  .card-arabic {
+    font-size: 38px;
+    line-height: 2.5;
+  }
+}
 
     .card-wolof {
       font-family: 'Cormorant Garamond', Georgia, serif;
