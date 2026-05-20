@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Serigne Touba — Lumière Éternelle</title>
+
+  <!-- Polices Google : Cormorant Garamond (display), Lateef (arabe), Noto Sans Arabic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lateef:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       VARIABLES GLOBALES — PALETTE SPIRITUELLE
+    ============================================= */
+    :root {
+      --sand:      #E8DCCB;
+      --gold:      #C8A96B;
+      --gold-dark: #A07D3F;
+      --gold-pale: #F0E4C8;
+      --black:     #111111;
+      --offwhite:  #F8F5F0;
+      --muted:     #9A8E7E;
+      --card-bg:   rgba(248, 245, 240, 0.72);
+      --border:    rgba(200, 169, 107, 0.3);
+      --glow:      rgba(200, 169, 107, 0.18);
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--offwhite);
+      color: var(--black);
+      font-family: 'Noto Serif', Georgia, serif;
+      overflow-x: hidden;
+    }
+
+    /* =============================================
+       FOND ANIMÉ — PARTICULES LUMINEUSES
+    ============================================= */
+    #canvas-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Overlay texture parchemin */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* =============================================
+       ORNEMENT SVG ISLAMIQUE — HEADER
+    ============================================= */
+    .ornement-top {
+      position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: min(600px, 100%);
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    /* =============================================
+       HERO SECTION
+    ============================================= */
+    #hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 60px;
+      text-align: center;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    /* Halo doré central */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60vw; height: 60vw;
+      max-width: 700px; max-height: 700px;
+      background: radial-gradient(ellipse, rgba(200,169,107,0.13) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: halo-pulse 6s ease-in-out infinite;
+    }
+
+    @keyframes halo-pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+      50%       { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
+    }
+
+    /* Bismillah / ornement calligraphique */
+    .bismillah {
+      font-family: 'Lateef', 'Noto Nastaliq Urdu', serif;
+      font-size: clamp(28px, 7vw, 56px);
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      line-height: 1.4;
+      opacity: 0;
+      animation: fadeSlideUp 1.4s cubic-bezier(.22,1,.36,1) 0.3s forwards;
+      text-shadow: 0 0 40px rgba(200,169,107,0.4);
+    }
+
+    .hero-divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 28px auto;
+      opacity: 0;
+      animation: fadeSlideUp 1s ease 0.8s forwards;
+    }
+
+    /* Vers arabe principal */
+    .arabic-verse {
+      font-family: 'Lateef', 'Noto Nastaliq Urdu', serif;
+      font-size: clamp(32px, 8vw, 68px);
+      line-height: 1.7;
+      color: var(--black);
+      direction: rtl;
+      unicode-bidi: bidi-override;
+      max-width: 700px;
+      opacity: 0;
+      animation: fadeSlideUp 1.4s cubic-bezier(.22,1,.36,1) 0.6s forwards;
+    }
+
+    .poem-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(13px, 3vw, 16px);
+      font-weight: 300;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 32px;
+      opacity: 0;
+      animation: fadeSlideUp 1s ease 1s forwards;
+    }
+
+    .signature {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(18px, 4vw, 26px);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--gold-dark);
+      margin-top: 12px;
+      opacity: 0;
+      animation: fadeSlideUp 1s ease 1.2s forwards;
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      opacity: 0;
+      animation: fadeSlideUp 1s ease 1.8s forwards;
+    }
+
+    .scroll-hint span {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .scroll-arrow {
+      width: 16px; height: 16px;
+      border-right: 1px solid var(--gold);
+      border-bottom: 1px solid var(--gold);
+      transform: rotate(45deg);
+      animation: bounce-arrow 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce-arrow {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50%       { transform: rotate(45deg) translateY(5px); }
+    }
+
+    /* =============================================
+       SECTION GÉNÉRIQUE
+    ============================================= */
+    section {
+      position: relative;
+      z-index: 2;
+      padding: 80px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(26px, 5vw, 38px);
+      font-weight: 300;
+      text-align: center;
+      color: var(--black);
+      margin-bottom: 48px;
+      line-height: 1.3;
+    }
+
+    .gold-line {
+      width: 40px; height: 1px;
+      background: var(--gold);
+      margin: 16px auto 40px;
+      display: block;
+    }
+
+    /* =============================================
+       SECTION TRADUCTION — COLONNES
+    ============================================= */
+    #traduction {
+      background: transparent;
+    }
+
+    .verses-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 620px) {
+      .verses-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Carte verset */
+    .verse-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      position: relative;
+      transition: transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s ease;
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    .verse-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(200, 169, 107, 0.14);
+    }
+
+    .verse-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Coin doré décoratif */
+    .verse-card::before {
+      content: '';
+      position: absolute;
+      top: 14px; right: 14px;
+      width: 28px; height: 28px;
+      border-top: 1px solid rgba(200,169,107,0.5);
+      border-right: 1px solid rgba(200,169,107,0.5);
+      border-radius: 0 4px 0 0;
+    }
+
+    .verse-card::after {
+      content: '';
+      position: absolute;
+      bottom: 14px; left: 14px;
+      width: 28px; height: 28px;
+      border-bottom: 1px solid rgba(200,169,107,0.5);
+      border-left: 1px solid rgba(200,169,107,0.5);
+      border-radius: 0 0 0 4px;
+    }
+
+    .card-lang {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .card-arabic {
+      font-family: 'Lateef', 'Noto Nastaliq Urdu', serif;
+      font-size: clamp(22px, 5vw, 34px);
+      line-height: 2;
+      direction: rtl;
+      color: var(--black);
+      text-align: right;
+    }
+
+    .card-wolof {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(16px, 3.5vw, 22px);
+      line-height: 1.9;
+      color: #2A2018;
+      font-style: italic;
+    }
+
+    .verse-number {
+      display: inline-block;
+      width: 22px; height: 22px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      font-size: 10px;
+      text-align: center;
+      line-height: 22px;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      margin-bottom: 12px;
+    }
+
+    /* =============================================
+       SECTION SENS DU VERSET
+    ============================================= */
+    #sens {
+      padding-top: 20px;
+    }
+
+    .sens-card {
+      background: linear-gradient(135deg, rgba(200,169,107,0.07), rgba(232,220,203,0.5));
+      border: 1px solid rgba(200,169,107,0.25);
+      border-radius: 20px;
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.22,1,.36,1);
+    }
+
+    .sens-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Grand guillemet décoratif */
+    .sens-card .quote-mark {
+      position: absolute;
+      top: 16px; left: 28px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 100px;
+      line-height: 1;
+      color: rgba(200, 169, 107, 0.15);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .sens-text {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(17px, 3.5vw, 22px);
+      line-height: 1.85;
+      color: #2A2018;
+      font-style: italic;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sens-attribution {
+      margin-top: 24px;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* Ornement SVG dans la carte sens */
+    .sens-ornament {
+      position: absolute;
+      bottom: -20px; right: -20px;
+      width: 160px;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+
+    /* =============================================
+       SECTION AUDIO
+    ============================================= */
+    #audio-section {
+      text-align: center;
+    }
+
+    .audio-wrapper {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px 48px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.22,1,.36,1);
+    }
+
+    .audio-wrapper.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .audio-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Bouton play central */
+    #play-btn {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      border: 1.5px solid var(--gold);
+      background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.35s cubic-bezier(.22,1,.36,1);
+      outline: none;
+    }
+
+    #play-btn:hover {
+      background: rgba(200,169,107,0.1);
+      transform: scale(1.06);
+      box-shadow: 0 0 32px rgba(200,169,107,0.25);
+    }
+
+    #play-btn svg { color: var(--gold); transition: transform 0.2s ease; }
+    #play-btn:hover svg { transform: scale(1.1); }
+
+    /* Ripple animé autour du bouton */
+    .ripple-ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,169,107,0.3);
+      animation: ripple 2.5s ease-out infinite;
+    }
+
+    .ripple-ring:nth-child(2) { inset: -18px; animation-delay: 0.8s; }
+    .ripple-ring:nth-child(3) { inset: -30px; animation-delay: 1.6s; }
+
+    @keyframes ripple {
+      0%   { transform: scale(0.95); opacity: 0.7; }
+      100% { transform: scale(1.15); opacity: 0; }
+    }
+
+    .audio-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--black);
+    }
+
+    /* Barre de progression */
+    .progress-container {
+      width: 220px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 2px;
+      background: rgba(200,169,107,0.2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.3s linear;
+    }
+
+    .time-display {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-top: 6px;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .audio-note {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      font-style: italic;
+      color: var(--muted);
+      max-width: 260px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* =============================================
+       FOOTER — MOSQUÉE DE TOUBA
+    ============================================= */
+    footer {
+      position: relative;
+      z-index: 2;
+      padding: 60px 24px 48px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .footer-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,169,107,0.3), transparent);
+      margin-bottom: 60px;
+    }
+
+    /* Silhouette mosquée SVG */
+    .mosque-silhouette {
+      width: min(480px, 90vw);
+      margin: 0 auto 32px;
+      display: block;
+      opacity: 0.18;
+    }
+
+    .footer-quote {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(18px, 4vw, 26px);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--black);
+      max-width: 500px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .footer-quote.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .footer-meta {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* Motifs géométriques islamiques footer */
+    .footer-pattern {
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 100%; max-width: 700px;
+      opacity: 0.07;
+      pointer-events: none;
+    }
+
+    /* =============================================
+       ANIMATION GLOBALE — SCROLL REVEAL
+    ============================================= */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =============================================
+       SÉPARATEUR ORNEMENTAL
+    ============================================= */
+    .orn-sep {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 48px auto;
+      max-width: 300px;
+      opacity: 0.5;
+    }
+
+    .orn-sep::before,
+    .orn-sep::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+
+    .orn-sep::after {
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 480px) {
+      section { padding: 60px 18px; }
+      .audio-wrapper { padding: 32px 28px; }
+      .sens-card { padding: 36px 24px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- FOND PARTICULES LUMINEUSES -->
+  <canvas id="canvas-bg"></canvas>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 1 — HERO
+  ══════════════════════════════════════════ -->
+  <section id="hero">
+
+    <!-- Ornement calligraphique en haut -->
+    <svg class="ornement-top" viewBox="0 0 600 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M300 8 L296 20 L284 20 L294 28 L290 40 L300 32 L310 40 L306 28 L316 20 L304 20 Z" fill="#C8A96B"/>
+      <line x1="0" y1="40" x2="260" y2="40" stroke="#C8A96B" stroke-width="0.5" stroke-dasharray="4 6"/>
+      <circle cx="270" cy="40" r="4" fill="none" stroke="#C8A96B" stroke-width="0.7"/>
+      <line x1="340" y1="40" x2="600" y2="40" stroke="#C8A96B" stroke-width="0.5" stroke-dasharray="4 6"/>
+      <circle cx="330" cy="40" r="4" fill="none" stroke="#C8A96B" stroke-width="0.7"/>
+    </svg>
+
+    <!-- Bismillah -->
+    <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+
+    <div class="hero-divider"></div>
+
+    <!-- Vers arabe principal -->
+    <h1 class="arabic-verse">
+
+اللَّهُمَّ يَا أَكْرَمُ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ
+الْفَاتِحِ لِمَا أُغْلِقَ وَالْخَاتِمِ
+لِمَا سَبَقَ نَاصِرِ الْحَقِّ بِالْحَقِّ وَالْهَادِي
+إِلَى صِرَاطِكَ الْمُسْتَقِيمِ
+وَعَلَى آلِهِ حَقَّ قَدْرِهِ وَمِقْدَارِهِ الْعَظِيمِ
+
+    </h1>
+
+    <p class="poem-title">Qasida Mawahibou Nafi</p>
+    <p class="signature">Cheikh Ahmadou Bamba Mbacké</p>
+
+    <div class="scroll-hint">
+      <span>Découvrir</span>
+      <div class="scroll-arrow"></div>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 2 — TRADUCTION
+  ══════════════════════════════════════════ -->
+  <section id="traduction">
+    <p class="section-label">Les bayites</p>
+    <h2 class="section-title">Arabe & Traduction </h2>
+    <span class="gold-line"></span>
+
+    <div class="verses-grid">
+
+      <!-- Carte arabe — vers 1 -->
+      <div class="verse-card" data-reveal>
+        <span class="card-lang">Arabe</span>
+        <span class="verse-number">1</span>
+        <p class="card-arabic">
+          شَمْسُ الشُّمُوسِ رَأْسُ الرُّؤُوسِ
+        </p>
+      </div>
+
+      <!-- Carte wolof — vers 1 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.12s">
+        <span class="card-lang">Wolof — Français</span>
+        <span class="verse-number">1</span>
+        <p class="card-wolof">
+          Moy ka ngua xamni mooy diantoup bépp diant, di kilifak képp kouy kilifa
+          <br/><br/>
+          <em style="font-size:0.85em; color: var(--muted);">il constitue le Soleil des soleils, le Suprême Chef de tous les chefs</em>
+        </p>
+      </div>
+
+      <!-- Carte arabe — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.24s">
+        <span class="card-lang">Arabe</span>
+        <span class="verse-number">2</span>
+        <p class="card-arabic">
+       خَيْرُ الْأَنِيسِ لِلْأَوْلِيَاءِ
+        </p>
+      </div>
+
+      <!-- Carte wolof — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.36s">
+        <span class="card-lang">Wolof — Français</span>
+        <span class="verse-number">2</span>
+        <p class="card-wolof">
+          ta itam, mooy gueune gui adji wétali niél bépp waliw
+          <br/><br/>
+          <em style="font-size:0.85em; color: var(--muted);">et le meilleur Compagnon pour les Saints </em>
+        </p>
+      </div>
+
+      <!-- Carte arabe — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.24s">
+        <span class="card-lang">Arabe</span>
+        <span class="verse-number">3</span>
+        <p class="card-arabic">
+       شِفَا الصُّدُورِ ضِيَاءُ الدُّورِ
+        </p>
+      </div>
+
+      <!-- Carte wolof — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.36s">
+        <span class="card-lang">Wolof — Français</span>
+        <span class="verse-number">3</span>
+        <p class="card-wolof">
+          moy adji saafara bépp djangoroy xoll, moy léérouk mbolém keur yi
+          <br/><br/>
+          <em style="font-size:0.85em; color: var(--muted);"> C'est le Remède des coeurs, la Lumière qui illumine les demeures</em>
+        </p>
+      </div>
+
+      <!-- Carte arabe — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.24s">
+        <span class="card-lang">Arabe</span>
+        <span class="verse-number">4</span>
+        <p class="card-arabic">
+       بَدْرُ البُدُورِ بَادِي الضِّيَاءِ    
+        </p>
+      </div>
+
+      <!-- Carte wolof — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.36s">
+        <span class="card-lang">Wolof — Français</span>
+        <span class="verse-number">4</span>
+        <p class="card-wolof">
+          mooy wéérou bépp wéér wayé itam, di kiy adji fégnal bépp léér
+          <br/><br/>
+          <em style="font-size:0.85em; color: var(--muted);">la Pleine Lune au firmament et à la clarté éclatante </em>
+        </p>
+      </div>
+
+      <!-- Carte arabe — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.24s">
+        <span class="card-lang">Arabe</span>
+        <span class="verse-number">5</span>
+        <p class="card-arabic">
+       غَيْثُ شَكُورِ لَيْثُ كَفُورِ
+        </p>
+      </div>
+
+      <!-- Carte wolof — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.36s">
+        <span class="card-lang">Wolof — Français</span>
+        <span class="verse-number">5</span>
+        <p class="card-wolof">
+          moy app taaw si bépp adji santaakone, moy gaïndé si kaw way wéddi gni Yallah
+          <br/><br/>
+          <em style="font-size:0.85em; color: var(--muted);"> C'est l'Asile des serviteurs reconnaissants à DIEU mais qui constitue un
+Lion implacable envers l'infidèle </em>
+        </p>
+      </div>
+
+      <!-- Carte arabe — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.24s">
+        <span class="card-lang">Arabe</span>
+        <span class="verse-number">6</span>
+        <p class="card-arabic">
+       نَافِي نَفُورِ مُبْدِي قَلَاءِ  
+        </p>
+      </div>
+
+      <!-- Carte wolof — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.36s">
+        <span class="card-lang">Wolof — Français</span>
+        <span class="verse-number">6</span>
+        <p class="card-wolof">
+          mooy adji dakh tchi way deugeur gni bop, ta di gni ngua xamni, ay way mabgnél lagn si kaw djoulite gni
+          <br/><br/>
+          <em style="font-size:0.85em; color: var(--muted);">et qui chasse le rebelle débordant de haine </em>
+        </p>
+      </div>
+
+      <!-- Carte arabe — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.24s">
+        <span class="card-lang">Arabe</span>
+        <span class="verse-number">7</span>
+        <p class="card-arabic">
+   جَنَّاتُ هَادِ نِيرَانُ عَادِ
+        </p>
+      </div>
+
+      <!-- Carte wolof — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.36s">
+        <span class="card-lang">Wolof — Français</span>
+        <span class="verse-number">7</span>
+        <p class="card-wolof">
+          mooy aljannay way dioubb gni, di safara niél way dioubadi gni
+          <br/><br/>
+          <em style="font-size:0.85em; color: var(--muted);"> Il symbolise à la fois l'Eden pour tout serviteur bien-guidé et l'Enfer envers les transgresseurs</em>
+        </p>
+      </div>
+
+      <!-- Carte arabe — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.24s">
+        <span class="card-lang">Arabe</span>
+        <span class="verse-number">8</span>
+        <p class="card-arabic">
+فَالْفَضْلُ بَادِ
+       لِلْعُقَلَاءِ
+        </p>
+      </div>
+
+      <!-- Carte wolof — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.36s">
+        <span class="card-lang">Wolof — Français</span>
+        <span class="verse-number">8</span>
+        <p class="card-wolof">
+          ta ay ngeunélam, adji féégn la si képp ko xamni borom xél la
+          <br/><br/>
+          <em style="font-size:0.85em; color: var(--muted);">Lui dont la Primauté s'avère indubitable aux yeux de tout homme doué d'intelligence </em>
+        </p>
+      </div>
+
+      <!-- Carte arabe — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.24s">
+        <span class="card-lang">Arabe</span>
+        <span class="verse-number">9</span>
+        <p class="card-arabic">
+       مَاحِي الْخَطَايَا بَادِي الْعَطَايَا
+        </p>
+      </div>
+
+      <!-- Carte wolof — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.36s">
+        <span class="card-lang">Wolof — Français</span>
+        <span class="verse-number">9</span>
+        <p class="card-wolof">
+          mooy ka ngua xamni mooy adji farr lépp louy niawtééf, moy kiy fégnal ay may si képp kou ko topp
+          <br/><br/>
+          <em style="font-size:0.85em; color: var(--muted);">Lui qui réhabilite les fautes, qui est pourvu en Dons Insignes</em>
+        </p>
+      </div>
+
+      <!-- Carte arabe — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.24s">
+        <span class="card-lang">Arabe</span>
+        <span class="verse-number">10</span>
+        <p class="card-arabic">
+       هَادِي البَرَايَا بِلَا غَلَاءِ
+        </p>
+      </div>
+
+      <!-- Carte wolof — vers 2 -->
+      <div class="verse-card" data-reveal style="transition-delay:0.36s">
+        <span class="card-lang">Wolof — Français</span>
+        <span class="verse-number">10</span>
+        <p class="card-wolof">
+          moy adji guindi bépp mbindéf si loudoul mou lén di tékk bén diis diis, khana loudoul rek ngir dieumé lén sa Yallah sunu borom
+          <br/><br/>
+          <em style="font-size:0.85em; color: var(--muted);"> et qui guide les créatures en dehors de tout excès </em>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Séparateur ornemental -->
+  <div class="orn-sep">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2L13.5 8.5H20L14.5 12.5L16.5 19L12 15L7.5 19L9.5 12.5L4 8.5H10.5L12 2Z" fill="#C8A96B" opacity="0.7"/>
+    </svg>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 3 — SENS DU VERSET
+  ══════════════════════════════════════════ -->
+  <section id="sens">
+    <p class="section-label">Interprétation</p>
+    <h2 class="section-title">Le Sens du passage</h2>
+    <span class="gold-line"></span>
+
+    <div class="sens-card" data-reveal>
+      <span class="quote-mark">"</span>
+
+      <!-- Ornement géométrique en fond -->
+      <svg class="sens-ornament" viewBox="0 0 160 160" fill="none" aria-hidden="true">
+        <polygon points="80,10 150,40 150,120 80,150 10,120 10,40" stroke="#C8A96B" stroke-width="1" fill="none"/>
+        <polygon points="80,30 130,52 130,108 80,130 30,108 30,52" stroke="#C8A96B" stroke-width="0.7" fill="none"/>
+        <circle cx="80" cy="80" r="24" stroke="#C8A96B" stroke-width="0.7" fill="none"/>
+        <circle cx="80" cy="80" r="10" fill="#C8A96B" opacity="0.3"/>
+      </svg>
+
+      <p class="sens-text">
+
+        Ces vers révèlent la grandeur spirituelle et la noblesse de la mission du Prophète ﷺ, présenté comme le Soleil des soleils et le guide suprême des créatures. À travers ces images puissantes, Cheikh Ahmadou Bamba met en lumière la place centrale du Messager dans l’élévation des âmes et la purification des cœurs.
+
+Il est décrit comme la lumière qui éclaire les mondes, le refuge des serviteurs reconnaissants et la miséricorde incarnée pour les croyants. Par sa présence, les cœurs trouvent la guérison et les âmes égarées retrouvent le chemin de la droiture ( li mom lou wérr leu ).
+
+Ces paroles ne sont pas de simples descriptions poétiques : elles sont une invitation à la méditation et à la reconnaissance, rappelant au croyant la source de toute guidance et la <strong style="font-style:normal; font-weight:600; color:var(--gold-dark)">nécessité de s’attacher à la lumière prophétique dans chaque aspect de sa vie</strong>. Dama guiss tableau bi mou touché ma en plus xam nani mawahibou sa khassida coup de coeur leu motakh ma yééné won lako. 
+      </p>
+
+      <p class="sens-attribution">— Souma déffé faute adjoul 😂</p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 4 — AUDIO
+  ══════════════════════════════════════════ -->
+  <section id="audio-section">
+    <p class="section-label">Récitation</p>
+    <h2 class="section-title">WAW GOORÉ WAY DEUG RÉK !</h2>
+    <span class="gold-line"></span>
+
+    <div class="audio-wrapper" data-reveal>
+      <span class="audio-label">Kasida Mawahibou Nafih</span>
+
+      <!-- Bouton play avec ripple -->
+      <button id="play-btn" aria-label="Écouter la récitation">
+        <div class="ripple-ring"></div>
+        <div class="ripple-ring"></div>
+        <div class="ripple-ring"></div>
+        <!-- Icône play/pause -->
+        <svg id="play-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="10,7 22,14 10,21" fill="#C8A96B" stroke="none"/>
+        </svg>
+      </button>
+
+      <div class="audio-title">Cheikh Ahmadou Bamba</div>
+
+      <!-- Barre de progression simulée -->
+      <div class="progress-container">
+        <div class="progress-bar-bg">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="time-display">
+          <span id="time-current">0:00</span>
+          <span id="time-total">—:——</span>
+        </div>
+      </div>
+
+      <p class="audio-note">
+        Am dégloul tableau bi. Si javais une belle voix j'aurais recité moi même mais malheureusement 😂 lou Yallah kham doy na.
+      </p>
+
+      <!-- Élément audio caché — remplacer src par le vrai fichier -->
+      <audio id="audio-player" controls preload="metadata">
+        <source src="sokhnaMai.mp3" type="audio/mpeg" />
+      </audio>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       FOOTER — TOUBA
+  ══════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-divider"></div>
+
+    <!-- Silhouette artistique Grande Mosquée de Touba -->
+    <svg class="mosque-silhouette" viewBox="0 0 480 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- Minaret central gauche -->
+      <rect x="60" y="30" width="16" height="120" fill="#C8A96B"/>
+      <polygon points="60,30 68,10 76,30" fill="#C8A96B"/>
+      <circle cx="68" cy="8" r="3" fill="#C8A96B"/>
+      <!-- Minaret central droit -->
+      <rect x="404" y="30" width="16" height="120" fill="#C8A96B"/>
+      <polygon points="404,30 412,10 420,30" fill="#C8A96B"/>
+      <circle cx="412" cy="8" r="3" fill="#C8A96B"/>
+      <!-- Minarets petits -->
+      <rect x="120" y="60" width="10" height="90" fill="#C8A96B"/>
+      <polygon points="120,60 125,45 130,60" fill="#C8A96B"/>
+      <rect x="350" y="60" width="10" height="90" fill="#C8A96B"/>
+      <polygon points="350,60 355,45 360,60" fill="#C8A96B"/>
+      <!-- Corps de la mosquée -->
+      <rect x="80" y="90" width="320" height="60" fill="#C8A96B"/>
+      <!-- Dôme central -->
+      <ellipse cx="240" cy="90" rx="60" ry="50" fill="#C8A96B"/>
+      <!-- Dômes latéraux -->
+      <ellipse cx="145" cy="100" rx="35" ry="28" fill="#C8A96B"/>
+      <ellipse cx="335" cy="100" rx="35" ry="28" fill="#C8A96B"/>
+      <!-- Croissant sur dôme central -->
+      <path d="M234 52 Q240 42 246 52 Q240 48 234 52Z" fill="#F8F5F0"/>
+      <circle cx="240" cy="48" r="3" fill="#F8F5F0"/>
+      <!-- Sol -->
+      <rect x="20" y="150" width="440" height="4" fill="#C8A96B" rx="2"/>
+      <!-- Arches décoratives -->
+      <path d="M100 150 Q120 130 140 150" stroke="#F8F5F0" stroke-width="1.5" fill="none" opacity="0.4"/>
+      <path d="M160 150 Q180 130 200 150" stroke="#F8F5F0" stroke-width="1.5" fill="none" opacity="0.4"/>
+      <path d="M220 150 Q240 125 260 150" stroke="#F8F5F0" stroke-width="1.5" fill="none" opacity="0.4"/>
+      <path d="M280 150 Q300 130 320 150" stroke="#F8F5F0" stroke-width="1.5" fill="none" opacity="0.4"/>
+      <path d="M340 150 Q360 130 380 150" stroke="#F8F5F0" stroke-width="1.5" fill="none" opacity="0.4"/>
+    </svg>
+
+    <!-- Croissant & étoile -->
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="margin: 0 auto 24px; display: block; opacity: 0.45;" aria-hidden="true">
+      <path d="M22 8C15 8 9 14 9 21C9 28 15 34 22 34C26 34 29.5 32 32 29C29.5 30 26.5 30.5 24 29.5C17.5 27 14 20 16 13.5C17.5 9.5 19.5 8.5 22 8Z" fill="#C8A96B"/>
+      <polygon points="30,10 31.5,14.5 36,14.5 32.5,17 34,21.5 30,19 26,21.5 27.5,17 24,14.5 28.5,14.5" fill="#C8A96B" transform="scale(0.7) translate(16, 0)"/>
+    </svg>
+
+    <p class="footer-quote" data-reveal>
+      "Ce tableau est une lumière pour ton cœur."
+    </p>
+
+    <p class="footer-meta" style="margin-bottom:8px; opacity:0.6">
+      🍀Made by Abdou Salam Mboup pour sa marraine Sokhna Maïmouna Niane🍀
+    </p>
+    <p class="footer-meta" style="opacity:0.35">Thiés, Sénégal</p>
+
+    <!-- Motif géométrique islamique footer -->
+    <svg class="footer-pattern" viewBox="0 0 700 120" fill="none" aria-hidden="true">
+      <!-- Rangée de motifs étoilés -->
+      <g opacity="0.6">
+        <use href="#star6" x="0" y="0"/>
+        <use href="#star6" x="70" y="0"/>
+        <use href="#star6" x="140" y="0"/>
+        <use href="#star6" x="210" y="0"/>
+        <use href="#star6" x="280" y="0"/>
+        <use href="#star6" x="350" y="0"/>
+        <use href="#star6" x="420" y="0"/>
+        <use href="#star6" x="490" y="0"/>
+        <use href="#star6" x="560" y="0"/>
+        <use href="#star6" x="630" y="0"/>
+      </g>
+      <defs>
+        <symbol id="star6" viewBox="0 0 60 60" width="60" height="60">
+          <polygon points="30,5 35,22 52,22 38,32 44,50 30,40 16,50 22,32 8,22 25,22" fill="none" stroke="#C8A96B" stroke-width="0.8"/>
+        </symbol>
+      </defs>
+    </svg>
+  </footer>
+
+  <!-- ══════════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════════ -->
+  <script>
+    /* ==========================================
+       FOND PARTICULES — Canvas animation
+    ========================================== */
+    (function() {
+      const canvas = document.getElementById('canvas-bg');
+      const ctx    = canvas.getContext('2d');
+      let W, H, particles;
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      // Créer des particules lumineuses
+      function initParticles() {
+        particles = Array.from({ length: 55 }, () => ({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: Math.random() * 1.6 + 0.3,
+          vx: (Math.random() - 0.5) * 0.25,
+          vy: (Math.random() - 0.5) * 0.25,
+          alpha: Math.random() * 0.45 + 0.05,
+          pulse: Math.random() * Math.PI * 2
+        }));
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        // Dessin des lignes entre particules proches
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 130) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(200, 169, 107, ${0.05 * (1 - dist / 130)})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+
+        // Dessin des particules
+        particles.forEach(p => {
+          p.pulse += 0.018;
+          const alpha = p.alpha + Math.sin(p.pulse) * 0.12;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(200, 169, 107, ${Math.max(0, alpha)})`;
+          ctx.fill();
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0) p.x = W;
+          if (p.x > W) p.x = 0;
+          if (p.y < 0) p.y = H;
+          if (p.y > H) p.y = 0;
+        });
+
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      initParticles();
+      draw();
+      window.addEventListener('resize', () => { resize(); initParticles(); });
+    })();
+
+    /* ==========================================
+       SCROLL REVEAL — IntersectionObserver
+    ========================================== */
+    const revealEls = document.querySelectorAll('[data-reveal]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    revealEls.forEach(el => observer.observe(el));
+
+    /* ==========================================
+       LECTEUR AUDIO
+    ========================================== */
+    const audio       = document.getElementById('audio-player');
+    const playBtn     = document.getElementById('play-btn');
+    const playIcon    = document.getElementById('play-icon');
+    const progressFill = document.getElementById('progress-fill');
+    const timeCurrent = document.getElementById('time-current');
+    const timeTotal   = document.getElementById('time-total');
+
+    let isPlaying = false;
+
+    // Icônes SVG play / pause
+    const PLAY_PATH  = `<polygon points="10,7 22,14 10,21" fill="#C8A96B" stroke="none"/>`;
+    const PAUSE_PATH = `
+      <rect x="8" y="7" width="4" height="14" fill="#C8A96B" rx="1"/>
+      <rect x="16" y="7" width="4" height="14" fill="#C8A96B" rx="1"/>`;
+
+    function formatTime(s) {
+      if (!isFinite(s)) return '—:——';
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+    }
+
+    playBtn.addEventListener('click', () => {
+      // Si aucun src : simulation visuelle pour la démo
+      if (!audio.src || audio.src === window.location.href) {
+        simulatePlayback();
+        return;
+      }
+      if (isPlaying) {
+        audio.pause();
+      } else {
+        audio.play().catch(() => simulatePlayback());
+      }
+    });
+
+    audio.addEventListener('play', () => {
+      isPlaying = true;
+      playIcon.innerHTML = PAUSE_PATH;
+    });
+
+    audio.addEventListener('pause', () => {
+      isPlaying = false;
+      playIcon.innerHTML = PLAY_PATH;
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      const pct = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = pct + '%';
+      timeCurrent.textContent  = formatTime(audio.currentTime);
+    });
+
+    audio.addEventListener('loadedmetadata', () => {
+      timeTotal.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('ended', () => {
+      isPlaying = false;
+      playIcon.innerHTML = PLAY_PATH;
+      progressFill.style.width = '0%';
+      timeCurrent.textContent  = '0:00';
+    });
+
+    // Simulation visuelle si pas de fichier audio
+    let simTimer = null;
+    let simProgress = 0;
+    let simDuration = 180; // 3 minutes simulées
+
+    function simulatePlayback() {
+      if (isPlaying) {
+        clearInterval(simTimer);
+        isPlaying = false;
+        playIcon.innerHTML = PLAY_PATH;
+        return;
+      }
+      isPlaying = true;
+      playIcon.innerHTML = PAUSE_PATH;
+      timeTotal.textContent = formatTime(simDuration);
+
+      simTimer = setInterval(() => {
+        simProgress += 0.5;
+        if (simProgress >= simDuration) {
+          clearInterval(simTimer);
+          isPlaying = false;
+          playIcon.innerHTML = PLAY_PATH;
+          simProgress = 0;
+          progressFill.style.width = '0%';
+          timeCurrent.textContent = '0:00';
+          return;
+        }
+        progressFill.style.width = (simProgress / simDuration * 100) + '%';
+        timeCurrent.textContent  = formatTime(simProgress);
+      }, 500);
+    }
+  </script>
+
+  <script>
+  const audiio = document.getElementById("audio-player");
+  const btn = document.getElementById("play-btn");
+
+  btn.addEventListener("click", () => {
+    if (audiio.paused) {
+      audio.play();
+    } else {
+      audiio.pause();
+    }
+  });
+</script>
+
+</body>
+</html>
